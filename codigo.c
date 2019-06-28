@@ -35,9 +35,9 @@ int main(){
 			
 			switch(op2){
 				case 1:
-					printf("\n Introduce tu peso en kg (por ejemplo 83.5 kg): \n\t");
+					printf("\n Introduce tu peso en kg (por ejemplo 83.5): \n\t");
 						scanf("%f", &peso);
-					printf("\n Introduce tu altura en metros (por ejemplo 1.76 m): \n\t");
+					printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
 						scanf("%f", &altura);
 					IMC = peso / (altura*altura);
 					printf("\n\t Su IMC es de %g \n\n", IMC);
