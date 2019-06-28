@@ -21,8 +21,8 @@ typedef struct{
 }rutina;
 
 int main(){
-	int i, j, k, l, nuevo = 1, reps, guia, op, op2, op3, op4, num_ej, num_sets, num_reps, rest;
-	char nombre[20], file_name[20];
+	int i, j, k, l, m, n, nuevo = 1, reps, guia, op, op2, op3, op4, aux, aux2 = 0, repes[50], num_ej, num_sets, num_reps, rest;
+	char nombre[20], file_name[20], rutina[20];
 	float peso, IMC, altura;
 	FILE *ru, *ej, *rep, *us;
 	rutina rut[NUM_RUT];
@@ -47,9 +47,10 @@ int main(){
 	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
 	
 	printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
-	printf("\n\n\n > Dinos tu nombre para personalizar la experiencia: ");
+	printf("\n\n\n > Teclea tu nombre para personalizar la experiencia: ");
 		gets(nombre);
 		_strupr(nombre);
+		
 	while(!feof(us)){
 		fscanf(us, "%[^\n]\n", &file_name);
 		if(strcmp(file_name,nombre)==0){
@@ -59,15 +60,17 @@ int main(){
 			break;
 		}
 	}
-	fclose(us);
+	system("cls");
 	if(nuevo == 1){
-		fopen("Ficheros/Usuarios.txt", "a");
-        	fprintf(us,"\n%s",nombre);
-        fclose(us);
-		system("cls");
+		
+		rewind(us);
+		fopen("Ficheros/Usuarios.txt","a"); // NO ESCRIBE NUEVOS USUARIOS
+        fprintf(us,"\n%s", nombre);
+        
 		printf("\nEs la primera vez que utilizas este programa. Quieres leer una guia rapida de uso?" );
-		printf("\n\n [1] Si\n [2] No ");
+		printf("\n\n\n [1] Si\n\n [2] No ");
 			scanf("%i", &guia);
+			
 		while(guia != 1 && guia != 2){
 			system("cls");
 			printf("\n Opcion incorrecta.\n Quieres leer una guia rapida de uso?");
@@ -76,8 +79,7 @@ int main(){
 		}
     	
 		if(guia == 1){
-			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera \
-			\rapida usando nuestro registro de progresiones implementado en las rutinas.");
+			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera rapida usando nuestro registro de progresiones implementado en las rutinas.");
 		}
 	}
 	printf("\n\n\n > En que podemos ayudarte?: ");
@@ -120,7 +122,42 @@ int main(){
 				
 			switch(op3){
 				case 1:	
-					
+					printf("\n\tQue grupo muscular quieres entrenar? ");
+						gets(rutina);
+						system("cls");
+						
+					for(l=0; l<NUM_RUT; l++){
+						if(strcmp(rut[i].nombre,rutina)==0){
+							aux = i; // referencia de la rutina seleccionada
+							printf("\n\t Rutina de %s", rut[aux].nombre);
+							
+							for (m = 0; m < NUM_EJ; m++){
+								
+								printf("\n\n > Ejercicio %i\t%s", i+1, rut[aux].ej[m].nombre);
+								for (n = 0; n < NUM_SETS; n++){
+									
+									printf("\n\n Serie %i", n+1);
+									printf("\tTienes que hacer %i %s", rut[aux].ej[m].sets[n].reps, rut[aux].ej[m].nombre);
+									printf("\n\n\n\n\n > Pulsa cualquier tecla cuando termines la serie ");
+										getch();
+									system("cls");
+									
+									printf("\n Descansa durante %i''", REST_TIME);
+									printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
+										scanf("%i", &repes[aux2]);
+											aux2++;
+									printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
+										getch();
+									system("cls");
+								}
+							}
+							printf("\n > Enhorabuena has logrado acabar el entrenamiento");
+								
+						}
+						else{
+							printf("No hay ninguna rutina con ese nombre. Quieres crearla?");
+						}
+					}
 					break;
 					
 				case 2:
@@ -180,12 +217,12 @@ int main(){
 		
 		case 3:
 			printf("\n Hasta la proxima %s", nombre);
-			exit(1);
 			break;
 			
 		default:
 			printf("\n No existe tal opcion\n");
 	}
+	fclose(us);
 	
 	system("PAUSE");
 	return 0;
