@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define NUM_RUT 4
 #define NUM_EJ 5
 #define NUM_SETS 3
 #define REST_TIME 60
@@ -20,31 +21,49 @@ typedef struct{
 }rutina;
 
 int main(){
-	int i=0, j=0, k=0, l=0, nuevo = 1, guia, op, op2, op3, op4, num_ej, num_sets, num_reps, rest;
+	int i, j, k, l, nuevo = 1, reps, guia, op, op2, op3, op4, num_ej, num_sets, num_reps, rest;
 	char nombre[20], file_name[20];
 	float peso, IMC, altura;
-	FILE *r, *ej, *rep, *us;
-	rutina rut[2];
+	FILE *ru, *ej, *rep, *us;
+	rutina rut[NUM_RUT];
 	
-	r = fopen("Files/Rutinas.txt", "r");
-	ej = fopen("Files/Ejercicios", "r");
-	rep = fopen("Files/Repeticiones", "r");
-	us = fopen("Files/Usuarios", "r");
+	ru = fopen("Files/Rutinas.txt", "r");
+	ej = fopen("Files/Ejercicios.txt", "r");
+	rep = fopen("Files/Repeticiones.txt", "r");
+	us = fopen("Files/Usuarios.txt", "r");
+	
+	for(i=0;i<NUM_RUT;i++) // Se almacenan las rutinas en estructuras para luego ser comparadas
+	{
+		fscanf(ru, "[^\n]\n", &rut[i].nombre);
+		for(j=0;j<NUM_EJ;j++)
+		{
+			fscanf(ej, "%[^\n]\n", &rut[i].ej[j].nombre);
+			fscanf(rep, "%i\n", &reps);
+			
+			for(k=0;k<NUM_SETS;k++)
+				rut[i].ej[j].sets[k].reps = reps; // mismo numero de repticiones para todas las series de un mismo ejercicio
+		}
+	}
+	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
 	
 	printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
 	printf("\n\n\n > Dinos tu nombre para personalizar la experiencia: ");
-		scanf("%s", nombre[20]);
+		gets(nombre);
 		_strupr(nombre);
 	while(!feof(us)){
 		fscanf(us, "%[^\n]\n", &file_name);
 		if(strcmp(file_name,nombre)==0){
-			//system("cls");
+			system("cls");
 			printf("\n Hola %s, ya has usado este programa anteriormente asi que suponemos que sabes como se usa.", nombre);
 			nuevo = 0;
 			break;
 		}
 	}
+	fclose(us);
 	if(nuevo == 1){
+		fopen("Ficheros/Usuarios.txt", "a");
+        	fprintf(us,"\n%s",nombre);
+        fclose(us);
 		system("cls");
 		printf("\nEs la primera vez que utilizas este programa. Quieres leer una guia rapida de uso?" );
 		printf("\n\n [1] Si\n [2] No ");
@@ -52,29 +71,24 @@ int main(){
 		while(guia != 1 && guia != 2){
 			system("cls");
 			printf("\n Opcion incorrecta.\n Quieres leer una guia rapida de uso?");
-			printf("\n\n [1] Si\n [2] No ");
+			printf("\n\n\n [1] Si\n\n [2] No ");
 				scanf("%i", &guia);
 		}
-		fclose(us);
-		
-		if(nuevo==0){
-        	fopen("Ficheros/Usuarios.txt", "a");
-        	fprintf(us,"\n%s",nombre);
-    	}
     	
 		if(guia == 1){
-			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera rapida usando el registro de progresiones implementado en las rutinas.");
+			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera \
+			\rapida usando nuestro registro de progresiones implementado en las rutinas.");
 		}
 	}
 	printf("\n\n\n > En que podemos ayudarte?: ");
-	printf("\n\n\n\t [1] Consultar mi estado fisico\n\n\t [2] Entrenamientos y rutinas ");
+	printf("\n\n\n\t [1] Consultar mi estado fisico\n\n\t [2] Entrenamientos y rutinas \n\n\t [3] Salir");
 		scanf("%i", &op);
 	
 	switch(op){
 		case 1:
 			system("cls");
 			printf("\n Escoge una opcion:");
-			printf("\n\n\n\t [1] Calcular IMC (Indice de Masa Corporal)\n\n\t [2] Test de salud \n\t");
+			printf("\n\n\n\t [1] Calcular IMC (Indice de Masa Corporal)\n\n\t [2] Test de salud \n\t [3] Volver atras");
 			scanf("%i", &op2);
 			
 			switch(op2){
@@ -90,18 +104,26 @@ int main(){
 				case 2:
 				
 				break;
+				case 3:
+				break;
+				default:
+					printf("\n Esta opcion no existe");
 			}
 		break;
 		
 		case 2:
 			system("cls");
 			printf("\n Escoge una opcion:");
-			printf("\n\n\n\t [1] Nuevo entrenamiento\n\n\t [2] Records personales ");
+			printf("\n\n\n\t [1] Entrenar \n\n\t [2] Nueva rutina \n\n\t [3] Volver atras ");
 				scanf("%i", &op3);
 			system("cls");
 				
 			switch(op3){
-				case 1:
+				case 1:	
+					
+					break;
+					
+				case 2:
 					printf("\n Grupo muscular o capacidad fisica a entrenar: \n\t");
 						scanf("%s", rut[0].nombre);
 					printf("\n\n Introduce el numero de ejercicios que componen la rutina: \n\t");
@@ -147,13 +169,24 @@ int main(){
 					
 					
 					
-				break;
+					break;
+				
+				case 3:
+					break;
+				default:
+					printf("\n Esta opcion no existe");
 			}
 		break;
 		
+		case 3:
+			printf("\n Hasta la proxima %s", nombre);
+			exit(1);
+			break;
+			
 		default:
-			printf("\n No existe tal opcion.");
+			printf("\n No existe tal opcion\n");
 	}
 	
 	system("PAUSE");
+	return 0;
 }
