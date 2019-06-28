@@ -1,0 +1,4 @@
+espalda_biceps
+piernas
+pecho_triceps
+abdominales
