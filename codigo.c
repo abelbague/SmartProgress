@@ -21,16 +21,16 @@ typedef struct{
 }rutinas;
 
 int main(){
-	int i, j, k, l=0, m, n, nuevo = 1, guia, op, op2, op3, op4, aux, aux2 = 0, out = 0, num_reps, num_ej, rest, repes[50], rutina_len;
+	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4, aux, aux2 = 0, out = 0, num_reps, num_ej, rest, repes[50], rutina_len;
 	char name[20], file_name[20], rutina[20];
 	float peso, IMC, altura;
 	FILE *ru, *ej, *rep, *us;
-	rutinas rut[NUM_RUT];
+	rutinas rut[NUM_RUT+1];
 	
-	ru = fopen("Files/Rutinas.txt", "a+");
+	ru = fopen("Files/Rutinas.txt", "a+"); // leer y escribir
 	ej = fopen("Files/Ejercicios.txt", "r");
 	rep = fopen("Files/Repeticiones.txt", "r");
-	us = fopen("Files/Usuarios.txt", "a+");
+	us = fopen("Files/Usuarios.txt", "a+"); // leer y escribir
 	
 	for(i=0;i<NUM_RUT;i++) // Se almacenan las rutinas en estructuras para luego ser comparadas
 	{
@@ -41,10 +41,11 @@ int main(){
 			fscanf(rep, "%i\n", &num_reps);
 			
 			for(k=0;k<NUM_SETS;k++)
-				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repticiones para todas las series de un mismo ejercicio
+				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repeticiones para todas las series de un mismo ejercicio
 		}
 	}
-	printf("Nombre de la rutina %s", rut[3].nombre);
+	
+	
 	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
 	
 	printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
@@ -136,6 +137,7 @@ int main(){
 							printf("\n\n Pulsa cualquier tecla para empezar el entrenamiento ");
 								fflush(stdin);
 								getch();
+							system("cls");
 							printf("\n\t Rutina de %s", rut[aux].nombre);
 							
 							for (m = 0; m < NUM_EJ; m++){
@@ -151,16 +153,28 @@ int main(){
 									
 									printf("\n Descansa durante %i''", rest);
 									printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
-										scanf("%i", &repes[aux2]);
-											aux2++;
+										scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps); // ESTA RECOGIENDO MAL LOS DATOS??
 									printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
 										getch();
 									system("cls");
 								}
 							}
 							printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
-							printf("\n Estos son tus resultados:");	
-							break;	
+							printf("\n Estos son tus resultados:\n");	
+							printf("%30s", rut[aux].ej[0]);
+							
+							for( o=1; o<NUM_EJ; o++)
+								printf("%20s", rut[aux].ej[o]);
+							
+							for(r=0; r<NUM_SETS; r++){
+								printf("\n%20i", r+1);
+								
+								for(p=0;p<NUM_EJ;p++)
+									printf("%20i", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
+							}	
+							getch();
+								
+								
 						}	
 					}
 					if(out == 0)
@@ -179,9 +193,9 @@ int main(){
 						printf("\n\n Ejercicio numero %i: ", i+1);
 						printf("\n\n Introduce el nombre del ejercicio: \n\t");
 							scanf("%s", &rut[0].ej[i].nombre);
-						//printf("\n\n Introduce el numero de series: \n\t");
+						printf("\n\n Introduce el numero de series: \n\t");
 							//scanf("%i", &num_sets);
-						//printf("\n\n Numero de repeticiones por serie: \n\t");
+						printf("\n\n Numero de repeticiones por serie: \n\t");
 							//scanf("%i", &num_reps);
 				
 							
