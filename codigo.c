@@ -44,11 +44,10 @@ int main(){
 				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repeticiones para todas las series de un mismo ejercicio
 		}
 	}
-	
-	
 	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
-	
-	printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
+	do
+	{
+		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
 	printf("\n\n\n > Teclea tu nombre para personalizar la experiencia: ");
 		gets(name);
 		_strupr(name);
@@ -78,10 +77,10 @@ int main(){
 		}
     	
 		if(guia == 1){
-			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera rapida usando nuestro registro de progresiones implementado en las rutinas.");
+			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera rapida mediante nuestro sistema de registro de progresiones implementado en en el apartado de rutinas.");
 		}
 	}
-	printf("\n\n\n > En que podemos ayudarte %s?: ", name);
+	printf("\n\n > En que podemos ayudarte %s?: ", name);
 	printf("\n\n\n\t [1] Consultar mi estado fisico\n\n\t [2] Entrenamientos y rutinas \n\n\t [3] Salir");
 		scanf("%i", &op);
 	
@@ -89,7 +88,7 @@ int main(){
 		case 1:
 			system("cls");
 			printf("\n Escoge una opcion:");
-			printf("\n\n\n\t [1] Calcular IMC (Indice de Masa Corporal)\n\n\t [2] Test de salud \n\t [3] Volver atras");
+			printf("\n\n\n\t [1] Calcular IMC (Indice de Masa Corporal)\n\n\t [2] Test de salud \n\n\t [3] Volver atras");
 			scanf("%i", &op2);
 			
 			switch(op2){
@@ -107,6 +106,7 @@ int main(){
 				break;
 				case 3:
 				break;
+				
 				default:
 					printf("\n Esta opcion no existe");
 			}
@@ -237,13 +237,20 @@ int main(){
 		break;
 		
 		case 3:
-			printf("\n Hasta la proxima %s", name);
+			printf("\n >> Hasta la proxima %s\n\n", name);
+			Sleep(2000);
+			out = 1; //	Salir del programa
 			break;
 			
 		default:
 			printf("\n No existe tal opcion\n");
 	}
+	}while(out != 1);
+	
 	fclose(us);
+	fclose(ru);
+	fclose(ej);
+	fclose(rep);
 	
 	system("PAUSE");
 	return 0;
