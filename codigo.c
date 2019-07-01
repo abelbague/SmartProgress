@@ -21,10 +21,10 @@ typedef struct{
 }rutinas;
 
 int main(){
-	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4, aux, aux2 = 0, out = 0, num_reps, num_ej, rest, repes[50], rutina_len;
-	char name[20], file_name[20], rutina[20];
+	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4, aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50], rutina_len;
+	char name[20], file_name[20], rutina[20], nameFile[50];
 	float peso, IMC, altura;
-	FILE *ru, *ej, *rep, *us;
+	FILE *ru, *ej, *rep, *us, *pu;
 	rutinas rut[NUM_RUT+1];
 	
 	ru = fopen("Files/Rutinas.txt", "a+"); // leer y escribir
@@ -48,203 +48,178 @@ int main(){
 	do
 	{
 		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
-	printf("\n\n\n > Teclea tu nombre para personalizar la experiencia: ");
-		gets(name);
-		_strupr(name);
-		
-	while(!feof(us)){
-		fscanf(us, "%s\n", &file_name);
-		if(strcmp(file_name,name)==0){
-			system("cls");
-			printf("\n Hola %s, ya has usado este programa anteriormente asi que suponemos que sabes como se usa.", name);
-			nuevo = 0;
-			break;
-		}
-	}
-	system("cls");
-	if(nuevo == 1){
-        fprintf(us,"\n%s", name);
-        
-		printf("\nEs la primera vez que utilizas este programa. Quieres leer una guia rapida de uso?" );
-		printf("\n\n\n [1] Si\n\n [2] No ");
-			scanf("%i", &guia);
+		printf("\n\n\n > Teclea tu nombre para personalizar la experiencia: ");
+			gets(name);
+			_strupr(name);
 			
-		while(guia != 1 && guia != 2){
-			system("cls");
-			printf("\n Opcion incorrecta.\n Quieres leer una guia rapida de uso?");
+		while(!feof(us)){
+			fscanf(us, "%s\n", &file_name);
+			if(strcmp(file_name,name)==0){
+				system("cls");
+				printf("\n Hola %s, ya has usado este programa anteriormente asi que suponemos que sabes como se usa.", name);
+				nuevo = 0;
+				break;
+			}
+		}
+		system("cls");
+		if(nuevo == 1){
+	        fprintf(us,"\n%s", name);
+	        
+			printf("\nEs la primera vez que utilizas este programa. Quieres leer una guia rapida de uso?" );
 			printf("\n\n\n [1] Si\n\n [2] No ");
 				scanf("%i", &guia);
-		}
-    	
-		if(guia == 1){
-			printf("El objetivo de SmartProgress es ayudarte a que logres tus retos fisicos de manera rapida mediante nuestro sistema de registro de progresiones implementado en en el apartado de rutinas.");
-		}
-	}
-	printf("\n\n > En que podemos ayudarte %s?: ", name);
-	printf("\n\n\n\t [1] Consultar mi estado fisico\n\n\t [2] Entrenamientos y rutinas \n\n\t [3] Salir");
-		scanf("%i", &op);
-	
-	switch(op){
-		case 1:
-			system("cls");
-			printf("\n Escoge una opcion:");
-			printf("\n\n\n\t [1] Calcular IMC (Indice de Masa Corporal)\n\n\t [2] Test de salud \n\n\t [3] Volver atras");
-			scanf("%i", &op2);
-			
-			switch(op2){
-				case 1:
-					printf("\n Introduce tu peso en kg (por ejemplo 83.5): \n\t");
-						scanf("%f", &peso);
-					printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
-						scanf("%f", &altura);
-					IMC = (peso / (altura*altura))*100;
-					printf("\n\t Su IMC es de %g \n\n", IMC);
-				break;
 				
-				case 2:
-				
-				break;
-				case 3:
-				break;
-				
-				default:
-					printf("\n Esta opcion no existe");
+			while(guia != 1 && guia != 2){
+				system("cls");
+				printf("\n Opcion incorrecta.\n Quieres leer una guia rapida de uso?");
+				printf("\n\n\n [1] Si\n\n [2] No ");
+					scanf("%i", &guia);
 			}
-		break;
+	    	
+			if(guia == 1){
+				system("cls");
+				printf("\n El objetivo de SmartProgress es ayudarte a alcanzar tus retos fisicos de manera facil y rapida\n \
+	mediante nuestro sistema de registro de progresiones implementado en el apartado de rutinas.\n \
+	Ademas, disponemos de una opcion que te permite calcular tu Indice de Masa Corporal.");
+				printf("\n\n\n Pulsa una tecla para continuar...");
+				getch();
+			}
+		}
+		system("cls");
+		printf("\n\n > En que podemos ayudarte %s?: ", name);
+		printf("\n\n\n\t [1] Entrenamientos y rutinas\n\n\t [2] Calcular mi IMC (Indice de Masa Corporal)\n\n\t [3] Salir");
+			scanf("%i", &op);
 		
-		case 2:
-			system("cls");
-			printf("\n Escoge una opcion:");
-			printf("\n\n\n\t [1] Entrenar \n\n\t [2] Nueva rutina \n\n\t [3] Volver atras ");
-				scanf("%i", &op3);
-			system("cls");
-				
-			switch(op3){
-				case 1:
-					printf("\n\tQue grupo muscular quieres entrenar? ");
-					scanf("%s", rutina);
-					rutina_len = strlen(rutina);
-					//system("cls");
-						
-					for(l=0; l<NUM_RUT; l++){
-						if(strncmp(rut[l].nombre, rutina, rutina_len)==0){ // compara con tantos caracteres como se introduzcan
-							aux = l; // referencia de la rutina seleccionada
-							out = 1;
-							system("cls");
-							printf("\n\tCuanto tiempo de descanso quieres tener entre series?");
-								fflush(stdin);
-								scanf("%i", &rest);
-							printf("\n\n Pulsa cualquier tecla para empezar el entrenamiento ");
-								fflush(stdin);
-								getch();
-							system("cls");
-							printf("\n\t Rutina de %s", rut[aux].nombre);
+		switch(op){
+			case 1:
+				system("cls");
+				printf("\n Escoge una opcion:");
+				printf("\n\n\n\t [1] Entrenar \n\n\t [2] Volver atras ");
+					scanf("%i", &op3);
+				system("cls");
+					
+				switch(op3){
+					case 1:
+						printf("\n > Que grupo muscular quieres entrenar? ");
+						scanf("%s", rutina);
+						rutina_len = strlen(rutina);
+						//system("cls");
 							
-							for (m = 0; m < NUM_EJ; m++){
-								printf("\n\n > Ejercicio %i\t%s", i+1, rut[aux].ej[m].nombre);
+						for(l=0; l<NUM_RUT; l++){
+							if(strncmp(rut[l].nombre, rutina, rutina_len)==0){ // compara con el mismo numero caracteres
+								aux = l; // referencia de la rutina seleccionada
+								aux4 = 1;
+								system("cls");
+								printf("Has seleccionado la rutina de %s", rut[aux].nombre);
+								printf("\n\n > Tiempo de descanso entre series? ");
+									fflush(stdin);
+									scanf("%i", &rest);
+								printf("\n\n\n Pulsa cualquier tecla para empezar el entrenamiento... ");
+									fflush(stdin);
+									getch();
+								system("cls");
 								
-								for (n = 0; n < NUM_SETS; n++){
+								for (m = 0; m < 2; m++){
+									printf("\n\t Rutina de %s", rut[aux].nombre);
+									printf("\n\n\n > Ejercicio %i\t%s", m+1, rut[aux].ej[m].nombre);
 									
-									printf("\n\n Serie %i/%i", n+1, NUM_SETS);
-									printf("\tTienes que hacer %i %s", rut[aux].ej[m].sets[n].reps, rut[aux].ej[m].nombre);
-									printf("\n\n\n\n\n > Pulsa cualquier tecla cuando termines la serie ");
-										getch();
-									system("cls");
+									for (n = 0; n < NUM_SETS; n++){
+										
+										printf("\n\n Serie %i/%i", n+1, NUM_SETS);
+										printf("\tEl objetivo es hacer %i %s", rut[aux].ej[m].sets[n].reps, rut[aux].ej[m].nombre);
+										printf("\n\n\n\n\n\n\n\n\n > Pulsa 1 para continuar o 2 para salir: ");
+										if(getch() == '2')
+										{
+											aux3=1;
+											system("cls");
+											break;
+										}
+										system("cls");
+										printf("\n Descansa durante %i''", rest);
+										printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
+											scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps); // ESTA RECOGIENDO MAL LOS DATOS??
+										printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
+											getch();
+										system("cls");
+									}
+								if(aux3==1) 
+									break;
+								}
+								if(aux3!=1)
+									printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
+								printf("\n Estos son tus resultados:\n\n");	
+								printf("%20s", rut[aux].ej[0]);
+								
+								for( o=1; o<NUM_EJ; o++)
+									printf("%20s", rut[aux].ej[o]);
+								
+								for(r=0; r<NUM_SETS; r++){
+									printf("\n%20i", r+1);
 									
-									printf("\n Descansa durante %i''", rest);
-									printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
-										scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps); // ESTA RECOGIENDO MAL LOS DATOS??
-									printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
-										getch();
-									system("cls");
+									for(p=0;p<NUM_EJ;p++)
+										printf("%20i", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
+								}
+							strcat(name,"_");
+							strcat(name,rut[aux].nombre);
+							strcpy(nameFile, name);
+							strcat("Files/Progreso_usuarios/", nameFile);
+							strcat(nameFile, ".txt");
+							pu = fopen(nameFile, "w+");
+							puts(nameFile);
+							if(pu == NULL)
+							{
+								printf("\nError al abrir el archivo\n");
+								return -1;
+							}
+							else
+							{
+								for(r=0; r<NUM_SETS; r++){
+									fprintf(pu, "\n");
+									for(p=0;p<NUM_EJ;p++)
+										fprintf(pu, "%i\t", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
 								}
 							}
-							printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
-							printf("\n Estos son tus resultados:\n");	
-							printf("%30s", rut[aux].ej[0]);
-							
-							for( o=1; o<NUM_EJ; o++)
-								printf("%20s", rut[aux].ej[o]);
-							
-							for(r=0; r<NUM_SETS; r++){
-								printf("\n%20i", r+1);
-								
-								for(p=0;p<NUM_EJ;p++)
-									printf("%20i", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
-							}	
-							getch();
-								
-								
-						}	
-					}
-					if(out == 0)
-						printf("No hay ninguna rutina con ese nombre. Quieres crearla?");
-					break;
-					
-				case 2:
-					printf("\n Grupo muscular o capacidad fisica a entrenar: \n\t");
-						scanf("%s", rut[0].nombre);
-					printf("\n\n Introduce el numero de ejercicios que componen la rutina: \n\t");
-						scanf("%i", &num_ej);
-					
-				
-					for (i = 0; i < num_ej; i++){
-						system("cls");
-						printf("\n\n Ejercicio numero %i: ", i+1);
-						printf("\n\n Introduce el nombre del ejercicio: \n\t");
-							scanf("%s", &rut[0].ej[i].nombre);
-						printf("\n\n Introduce el numero de series: \n\t");
-							//scanf("%i", &num_sets);
-						printf("\n\n Numero de repeticiones por serie: \n\t");
-							//scanf("%i", &num_reps);
-				
-							
-						for (l = 0; l < NUM_SETS; l++)
-							rut[0].ej[i].sets[l].reps = num_reps;
-					}
-					system("cls");
-					printf("\n\n Pulse cualquier tecla para comenzar el entrenamiento...");
-					getch();
-					
-					printf("\n\t Rutina de %s", rut[0].nombre);
-					for (i = 0; i < NUM_EJ; i++){
-						system("cls");
-						printf("\n Ejercicio %i\t%s", i+1, rut[0].ej[k].nombre);
-						for (k = 0; k < NUM_SETS; k++){
-							system("cls");
-							printf("\n\nSerie %i", k+1);
-							printf("\n\n\n\t Tienes que hacer %i %s", rut[0].ej[i].sets[k].reps, rut[0].ej[i].nombre);
-							printf("\n\n\n\n Pulsa cualquier tecla cuando termines la serie...");
-							getch();
-							system("cls");
-							printf("\n Descansa durante %i''", REST_TIME);
-							printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
-								scanf("%i", &rut[1].ej[i].sets[k].reps);
-							printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
+							printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
+							getch();	
+							}
+						if(aux3==1) break;	
+						}
+						if(aux4 == 0){
+							printf("\nNo hay ninguna rutina con ese nombre. Pulsa cualquier tecla para volver al inicio");
 							getch();
 						}
-					}
+						break;
+						
+					case 2:
+						break;
+						
+					default:
+						printf("\n Esta opcion no existe");
 					
-					
-					
-					break;
-				
-				case 3:
-					break;
-				default:
-					printf("\n Esta opcion no existe");
-			}
-		break;
-		
-		case 3:
-			printf("\n >> Hasta la proxima %s\n\n", name);
-			Sleep(2000);
-			out = 1; //	Salir del programa
+				}
 			break;
 			
-		default:
-			printf("\n No existe tal opcion\n");
-	}
+			case 2:
+				system("cls");
+				printf("\n Introduce tu peso en kg (por ejemplo 83.5): \n\t");
+					scanf("%f", &peso);
+				printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
+					scanf("%f", &altura);
+					IMC = (peso / (altura*altura));
+				printf("\n\t Su IMC es de %g \n\n", IMC);
+				printf("\nPulsa cualquier tecla para salir...\n");
+				getch();
+				break;
+			
+			case 3:
+				printf("\n >> Hasta la proxima %s\n\n", name);
+				Sleep(2000);
+				out = 1; //	Salir del programa
+				break;
+				
+			default:
+				printf("\n No existe tal opcion\n");
+		}
 	}while(out != 1);
 	
 	fclose(us);
