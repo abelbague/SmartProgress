@@ -20,11 +20,16 @@ typedef struct{
 	ejercicio ej[NUM_EJ];
 }rutinas;
 
+void pedirDatos (float *p, float *a);
+float calculoIMC (float *p, float *a);
+
 int main(){
-	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4, aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50], rutina_len;
+	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4;
+	int aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50], rutina_len;
 	char name[20], file_name[20], rutina[20], nameFile[50];
-	float peso, IMC, altura;
+	float peso, altura;
 	FILE *ru, *ej, *rep, *us, *pu;
+	
 	rutinas rut[NUM_RUT+1];
 	
 	ru = fopen("Files/Rutinas.txt", "a+"); // leer y escribir
@@ -44,11 +49,13 @@ int main(){
 				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repeticiones para todas las series de un mismo ejercicio
 		}
 	}
+	
+	//rut[NUM_RUT].ej[]
 	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
 	do
 	{
 		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
-		printf("\n\n\n > Teclea tu nombre para personalizar la experiencia: ");
+		printf("\n\n\n\n\t > Teclea tu nombre para personalizar la experiencia: ");
 			gets(name);
 			_strupr(name);
 			
@@ -93,38 +100,39 @@ int main(){
 		switch(op){
 			case 1:
 				system("cls");
-				printf("\n Escoge una opcion:");
+				printf("\n > Escoge una opcion:");
 				printf("\n\n\n\t [1] Entrenar \n\n\t [2] Volver atras ");
 					scanf("%i", &op3);
 				system("cls");
 					
 				switch(op3){
 					case 1:
-						printf("\n > Que grupo muscular quieres entrenar? ");
+						printf("\n Rutinas disponibles: \n");
+						for(q = 0; q < NUM_RUT; q++)
+							printf("\n\n - %s", rut[q].nombre);
+						printf("\n\n\n > Escoge una rutina de las anteriores (ej. espalda): \n\t");
 						scanf("%s", rutina);
 						rutina_len = strlen(rutina);
-						//system("cls");
 							
 						for(l=0; l<NUM_RUT; l++){
-							if(strncmp(rut[l].nombre, rutina, rutina_len)==0){ // compara con el mismo numero caracteres
+							if(strncmp(rut[l].nombre, rutina, rutina_len)==0){ // compara con el mismo numero caracteres introducidos
 								aux = l; // referencia de la rutina seleccionada
 								aux4 = 1;
 								system("cls");
-								printf("Has seleccionado la rutina de %s", rut[aux].nombre);
-								printf("\n\n > Tiempo de descanso entre series? ");
+								printf("\n Has seleccionado la rutina de %s", rut[aux].nombre);
+								printf("\n\n > Tiempo de descanso entre series? \n\t");
 									fflush(stdin);
 									scanf("%i", &rest);
 								printf("\n\n\n Pulsa cualquier tecla para empezar el entrenamiento... ");
-									fflush(stdin);
 									getch();
 								system("cls");
 								
-								for (m = 0; m < 2; m++){
-									printf("\n\t Rutina de %s", rut[aux].nombre);
-									printf("\n\n\n > Ejercicio %i\t%s", m+1, rut[aux].ej[m].nombre);
-									
+								for (m = 0; m < NUM_EJ; m++){	
+								
 									for (n = 0; n < NUM_SETS; n++){
 										
+										printf("\n\t Rutina de %s", rut[aux].nombre);
+										printf("\n\n\n > Ejercicio %i\t%s", m+1, rut[aux].ej[m].nombre);
 										printf("\n\n Serie %i/%i", n+1, NUM_SETS);
 										printf("\tEl objetivo es hacer %i %s", rut[aux].ej[m].sets[n].reps, rut[aux].ej[m].nombre);
 										printf("\n\n\n\n\n\n\n\n\n > Pulsa 1 para continuar o 2 para salir: ");
@@ -137,6 +145,7 @@ int main(){
 										system("cls");
 										printf("\n Descansa durante %i''", rest);
 										printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
+											fflush(stdin);
 											scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps); // ESTA RECOGIENDO MAL LOS DATOS??
 										printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
 											getch();
@@ -148,7 +157,7 @@ int main(){
 								if(aux3!=1)
 									printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
 								printf("\n Estos son tus resultados:\n\n");	
-								printf("%20s", rut[aux].ej[0]);
+								printf("%40s", rut[aux].ej[0]);
 								
 								for( o=1; o<NUM_EJ; o++)
 									printf("%20s", rut[aux].ej[o]);
@@ -173,6 +182,8 @@ int main(){
 							}
 							else
 							{
+								r=0;
+								p=0;
 								for(r=0; r<NUM_SETS; r++){
 									fprintf(pu, "\n");
 									for(p=0;p<NUM_EJ;p++)
@@ -200,13 +211,8 @@ int main(){
 			break;
 			
 			case 2:
-				system("cls");
-				printf("\n Introduce tu peso en kg (por ejemplo 83.5): \n\t");
-					scanf("%f", &peso);
-				printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
-					scanf("%f", &altura);
-					IMC = (peso / (altura*altura));
-				printf("\n\t Su IMC es de %g \n\n", IMC);
+				pedirDatos (&peso, &altura);
+				printf("\n\t Su IMC es de %g \n\n", calculoIMC (&peso, &altura));
 				printf("\nPulsa cualquier tecla para salir...\n");
 				getch();
 				break;
@@ -229,4 +235,17 @@ int main(){
 	
 	system("PAUSE");
 	return 0;
+}
+
+void pedirDatos (float *p, float *a)
+{
+	system("cls");
+	printf("\n Introduce tu peso en kg (por ejemplo 83.5): \n\t");
+	scanf("%f", p);
+	printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
+	scanf("%f", a);
+}
+float calculoIMC (float *p, float *a)
+{
+	return (*p / *a * *a);
 }
