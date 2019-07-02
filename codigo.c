@@ -25,6 +25,7 @@ float calculoIMC (float *p, float *a);
 void tablaIMC (float *imc);
 int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj);
 int verificarUsuario (char nombre[], FILE *pf);
+void rellenarStruct (rutinas rutina[], FILE *pf1, FILE *pf2, FILE *pf3, int nRut, int nEj, int nSets);
 
 int main(){
 	int i, j, k, l=0, m, n, o, p, q, r, nuevo = 1, guia, op, op2;
@@ -40,19 +41,8 @@ int main(){
 	rep = fopen("Files/Repeticiones.txt", "r");
 	us = fopen("Files/Usuarios.txt", "a+"); // leer y añadir (append)
 	
-	for(i=0;i<NUM_RUT;i++) // Se almacenan las rutinas en estructuras para luego ser comparadas
-	{
-		fscanf(ru, "%s\n", rut[i].nombre);
-		for(j=0;j<NUM_EJ;j++)
-		{
-			fscanf(ej, "%s\n", rut[i].ej[j].nombre);
-			fscanf(rep, "%i\n", &num_reps);
-			
-			for(k=0;k<NUM_SETS;k++)
-				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repeticiones para todas las series de un mismo ejercicio
-		}
-	}
-
+	rellenarStruct (rut, ru, ej, rep, NUM_RUT, NUM_EJ, NUM_SETS);
+	
 	do
 	{
 		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
@@ -60,15 +50,8 @@ int main(){
 			gets(name);
 			_strupr(name);
 			
-		while(!feof(us)){
-			fscanf(us, "%s\n", &file_name);
-			if(strcmp(file_name,name)==0){
-				system("cls");
-				printf("\n Hola %s, ya has usado este programa anteriormente asi que suponemos que sabes como se usa.", name);
-				nuevo = 0;
-				break;
-			}
-		}
+		nuevo = verificarUsuario (name, us);
+		
 		system("cls");
 		if(nuevo == 1){
 	        fprintf(us,"\n%s", name);
@@ -96,7 +79,7 @@ de manera aproximada cual es tu estado fisico actual.");
 		}
 		system("cls");
 		printf("\n\n > En que podemos ayudarte %s?: ", name);
-		printf("\n\n\n\t [1] Entrenamientos y rutinas\n\n\t [2] Calcular mi IMC (Indice de Masa Corporal)\n\n\t [3] Salir");
+		printf("\n\n\n\t [1] Entrenamientos y rutinas\n\n\t [2] Calcular mi IMC (Indice de Masa Corporal)\n\n\t [3] Salir ");
 			scanf("%i", &op);
 		
 		switch(op){
@@ -171,7 +154,7 @@ de manera aproximada cual es tu estado fisico actual.");
 										printf("%-20i", rut[NUM_RUT].ej[p].sets[r].reps);
 								}
 								
-							archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ);
+							archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ); // SE ALMACENA EN UN .TXT
 							
 							if(archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ) == 0)
 								printf("\n\nTus resultados han sido correctamente guardados.");
@@ -284,4 +267,36 @@ int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int n
 	}
 }
 
-int verificarUsuario (char nombre[], FILE *pf);
+int verificarUsuario (char nombre[], FILE *pf)
+{
+	char filename[20];
+	int nuevousuario = 1;
+	
+	while(!feof(pf)){
+		fscanf(pf, "%s\n", &filename);
+		if(strcmp(filename,nombre)==0){
+			system("cls");
+			nuevousuario = 0;
+			break;
+		}
+	}
+	return nuevousuario;
+}
+
+void rellenarStruct (rutinas rutina[], FILE *pf1, FILE *pf2, FILE *pf3, int nRut, int nEj, int nSets)
+{
+	int i, j, k, numReps;
+	
+	for(i = 0; i < nRut; i++)
+	{
+		fscanf(pf1, "%s\n", rutina[i].nombre);
+		for(j = 0; j < nEj; j++)
+		{
+			fscanf(pf2, "%s\n", rutina[i].ej[j].nombre);
+			fscanf(pf3, "%i\n", &numReps);
+			
+			for(k = 0; k < NUM_SETS; k++)
+				rutina[i].ej[j].sets[k].reps = numReps;
+		}
+	}
+}
