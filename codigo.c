@@ -22,12 +22,14 @@ typedef struct{
 
 void pedirDatos (float *p, float *a);
 float calculoIMC (float *p, float *a);
+void tablaIMC (float *imc);
+int archivoUsuario ();
 
 int main(){
-	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2, op3, op4;
-	int aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50], rutina_len;
-	char name[20], file_name[20], rutina[20], nameFile[50];
-	float peso, altura;
+	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2;
+	int aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50];
+	char name[20], file_name[20], rutina[20], nameFile[50], rutaFile[50] = "Files/Progreso_usuarios/";
+	float peso, altura, imc;
 	FILE *ru, *ej, *rep, *us, *pu;
 	
 	rutinas rut[NUM_RUT+1];
@@ -86,8 +88,9 @@ int main(){
 			if(guia == 1){
 				system("cls");
 				printf("\n El objetivo de SmartProgress es ayudarte a alcanzar tus retos fisicos de manera facil y rapida\n \
-	mediante nuestro sistema de registro de progresiones implementado en el apartado de rutinas.\n \
-	Ademas, disponemos de una opcion que te permite calcular tu Indice de Masa Corporal.");
+mediante nuestro sistema de registro de progresiones implementado en el apartado de rutinas.\n \
+Ademas, disponemos de una opcion que te permite calcular tu Indice de Masa Corporal para conocer \
+de manera aproximada cual es tu estado fisico actual.");
 				printf("\n\n\n Pulsa una tecla para continuar...");
 				getch();
 			}
@@ -102,20 +105,19 @@ int main(){
 				system("cls");
 				printf("\n > Escoge una opcion:");
 				printf("\n\n\n\t [1] Entrenar \n\n\t [2] Volver atras ");
-					scanf("%i", &op3);
+					scanf("%i", &op2);
 				system("cls");
 					
-				switch(op3){
+				switch(op2){
 					case 1:
 						printf("\n Rutinas disponibles: \n");
 						for(q = 0; q < NUM_RUT; q++)
 							printf("\n\n - %s", rut[q].nombre);
 						printf("\n\n\n > Escoge una rutina de las anteriores (ej. espalda): \n\t");
 						scanf("%s", rutina);
-						rutina_len = strlen(rutina);
 							
 						for(l=0; l<NUM_RUT; l++){
-							if(strncmp(rut[l].nombre, rutina, rutina_len)==0){ // compara con el mismo numero caracteres introducidos
+							if(strncmp(rut[l].nombre, rutina, strlen(rutina))==0){ // compara con el mismo numero caracteres introducidos
 								aux = l; // referencia de la rutina seleccionada
 								aux4 = 1;
 								system("cls");
@@ -168,13 +170,10 @@ int main(){
 									for(p=0;p<NUM_EJ;p++)
 										printf("%20i", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
 								}
-							strcat(name,"_");
-							strcat(name,rut[aux].nombre);
-							strcpy(nameFile, name);
-							strcat("Files/Progreso_usuarios/", nameFile);
-							strcat(nameFile, ".txt");
-							pu = fopen(nameFile, "w+");
-							puts(nameFile);
+							strcat(name, rut[aux].nombre);
+							strcat(name, ".txt");
+							strcat(rutaFile,name);
+							pu = fopen(rutaFile, "w+");
 							if(pu == NULL)
 							{
 								printf("\nError al abrir el archivo\n");
@@ -185,7 +184,6 @@ int main(){
 								r=0;
 								p=0;
 								for(r=0; r<NUM_SETS; r++){
-									fprintf(pu, "\n");
 									for(p=0;p<NUM_EJ;p++)
 										fprintf(pu, "%i\t", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
 								}
@@ -193,7 +191,7 @@ int main(){
 							printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
 							getch();	
 							}
-						if(aux3==1) break;	
+						if(aux3 == 1) break;	
 						}
 						if(aux4 == 0){
 							printf("\nNo hay ninguna rutina con ese nombre. Pulsa cualquier tecla para volver al inicio");
@@ -212,8 +210,12 @@ int main(){
 			
 			case 2:
 				pedirDatos (&peso, &altura);
-				printf("\n\t Su IMC es de %g \n\n", calculoIMC (&peso, &altura));
-				printf("\nPulsa cualquier tecla para salir...\n");
+				imc = calculoIMC (&peso, &altura);
+				system("cls");
+				printf("\n\t > Su IMC es de %g", imc);
+				tablaIMC (&imc);
+				
+				printf("\n\n\n Pulsa cualquier tecla para salir...\n");
 				getch();
 				break;
 			
@@ -232,8 +234,7 @@ int main(){
 	fclose(ru);
 	fclose(ej);
 	fclose(rep);
-	
-	system("PAUSE");
+
 	return 0;
 }
 
@@ -245,7 +246,22 @@ void pedirDatos (float *p, float *a)
 	printf("\n Introduce tu altura en metros (por ejemplo 1.76): \n\t");
 	scanf("%f", a);
 }
+
 float calculoIMC (float *p, float *a)
 {
-	return (*p / *a * *a);
+	float IMC;
+	IMC = (*p /(*a * *a));
+	return IMC;
+}
+
+void tablaIMC (float *imc)
+{
+	if (*imc < 18.5)
+		printf("\n\n\t Su peso esta por debajo de lo normal. Le recomendamos que consulte a un especialista.");
+	else if (*imc >= 18.5 && *imc < 25)
+		printf("\n\n\t Su peso esta dentro valores ideales. No hay de que preocuparse.");
+	else if (*imc >= 25 && *imc < 30)
+		printf("\n\n\t Su peso esta un poco por encima de lo ideal. Deberia cuidar mas la alimentacion y hacer deporte a menudo.");
+	else if (*imc >= 30)
+		printf("\n\n\t Su peso esta muy por encima de lo normal. Le recomendamos que consulte a un especialista.");
 }
