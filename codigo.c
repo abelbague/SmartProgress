@@ -173,6 +173,9 @@ de manera aproximada cual es tu estado fisico actual.");
 								
 							archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ);
 							
+							if(archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ) == 0)
+								printf("\n\nTus resultados han sido correctamente guardados.");
+							
 							printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
 							getch();	
 							}
@@ -277,6 +280,7 @@ int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int n
 			for(k = 0; k < nEj; k++)
 				fprintf(pf, "%-20i", rutina.ej[k].sets[j].reps);
 		}
+	return 0;
 	}
 }
 
