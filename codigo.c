@@ -23,10 +23,11 @@ typedef struct{
 void pedirDatos (float *p, float *a);
 float calculoIMC (float *p, float *a);
 void tablaIMC (float *imc);
-int archivoUsuario ();
+int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj);
+int verificarUsuario (char nombre[], FILE *pf);
 
 int main(){
-	int i, j, k, l=0, m, n, p, o, q, r, nuevo = 1, guia, op, op2;
+	int i, j, k, l=0, m, n, o, p, q, r, nuevo = 1, guia, op, op2;
 	int aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50];
 	char name[20], file_name[20], rutina[20], nameFile[50], rutaFile[50] = "Files/Progreso_usuarios/";
 	float peso, altura, imc;
@@ -34,10 +35,10 @@ int main(){
 	
 	rutinas rut[NUM_RUT+1];
 	
-	ru = fopen("Files/Rutinas.txt", "a+"); // leer y escribir
+	ru = fopen("Files/Rutinas.txt", "r");
 	ej = fopen("Files/Ejercicios.txt", "r");
 	rep = fopen("Files/Repeticiones.txt", "r");
-	us = fopen("Files/Usuarios.txt", "a+"); // leer y escribir
+	us = fopen("Files/Usuarios.txt", "a+"); // leer y añadir (append)
 	
 	for(i=0;i<NUM_RUT;i++) // Se almacenan las rutinas en estructuras para luego ser comparadas
 	{
@@ -51,9 +52,7 @@ int main(){
 				rut[i].ej[j].sets[k].reps = num_reps; // mismo numero de repeticiones para todas las series de un mismo ejercicio
 		}
 	}
-	
-	//rut[NUM_RUT].ej[]
-	// printf("sets %i", rut[3].ej[2].sets[2].reps); para ver si almacena correctamente los datos
+
 	do
 	{
 		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
@@ -89,7 +88,7 @@ int main(){
 				system("cls");
 				printf("\n El objetivo de SmartProgress es ayudarte a alcanzar tus retos fisicos de manera facil y rapida\n \
 mediante nuestro sistema de registro de progresiones implementado en el apartado de rutinas.\n \
-Ademas, disponemos de una opcion que te permite calcular tu Indice de Masa Corporal para conocer \
+Ademas, disponemos de una opcion que te permite calcular tu Indice de Masa Corporal para conocer\n \
 de manera aproximada cual es tu estado fisico actual.");
 				printf("\n\n\n Pulsa una tecla para continuar...");
 				getch();
@@ -121,6 +120,7 @@ de manera aproximada cual es tu estado fisico actual.");
 								aux = l; // referencia de la rutina seleccionada
 								aux4 = 1;
 								system("cls");
+								strcpy(rut[NUM_RUT].nombre, rut[aux].nombre); // PARA LUEGO RELLENAR EL FICHERO DE TEXTO CON LOS RESULTADOS
 								printf("\n Has seleccionado la rutina de %s", rut[aux].nombre);
 								printf("\n\n > Tiempo de descanso entre series? \n\t");
 									fflush(stdin);
@@ -130,7 +130,7 @@ de manera aproximada cual es tu estado fisico actual.");
 								system("cls");
 								
 								for (m = 0; m < NUM_EJ; m++){	
-								
+									strcpy(rut[NUM_RUT].ej[m].nombre, rut[aux].ej[m].nombre); // PARA LUEGO RELLENAR EL FICHERO DE TEXTO CON LOS RESULTADOS
 									for (n = 0; n < NUM_SETS; n++){
 										
 										printf("\n\t Rutina de %s", rut[aux].nombre);
@@ -148,7 +148,7 @@ de manera aproximada cual es tu estado fisico actual.");
 										printf("\n Descansa durante %i''", rest);
 										printf("\n\n Cuantas repeticiones has podido hacer?\n\t");
 											fflush(stdin);
-											scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps); // ESTA RECOGIENDO MAL LOS DATOS??
+											scanf("%i", &rut[NUM_RUT].ej[m].sets[n].reps);
 										printf("\n\n\n\n Toca cualquier tecla cuando estes listo para continuar...");
 											getch();
 										system("cls");
@@ -159,35 +159,20 @@ de manera aproximada cual es tu estado fisico actual.");
 								if(aux3!=1)
 									printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
 								printf("\n Estos son tus resultados:\n\n");	
-								printf("%40s", rut[aux].ej[0]);
+								printf("\t\t%-20s", rut[aux].ej[0].nombre);
 								
 								for( o=1; o<NUM_EJ; o++)
-									printf("%20s", rut[aux].ej[o]);
+									printf("%-20s", rut[aux].ej[o].nombre);
 								
 								for(r=0; r<NUM_SETS; r++){
-									printf("\n%20i", r+1);
+									printf("\nSerie%-20i", r+1);
 									
 									for(p=0;p<NUM_EJ;p++)
-										printf("%20i", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
+										printf("%-20i", rut[NUM_RUT].ej[p].sets[r].reps);
 								}
-							strcat(name, rut[aux].nombre);
-							strcat(name, ".txt");
-							strcat(rutaFile,name);
-							pu = fopen(rutaFile, "w+");
-							if(pu == NULL)
-							{
-								printf("\nError al abrir el archivo\n");
-								return -1;
-							}
-							else
-							{
-								r=0;
-								p=0;
-								for(r=0; r<NUM_SETS; r++){
-									for(p=0;p<NUM_EJ;p++)
-										fprintf(pu, "%i\t", rut[NUM_EJ].ej[p].sets[r].reps); // NO SALEN BIEN LOS NUMEROS
-								}
-							}
+								
+							archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ);
+							
 							printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
 							getch();	
 							}
@@ -221,7 +206,7 @@ de manera aproximada cual es tu estado fisico actual.");
 			
 			case 3:
 				printf("\n >> Hasta la proxima %s\n\n", name);
-				Sleep(2000);
+				Sleep(1000);
 				out = 1; //	Salir del programa
 				break;
 				
@@ -265,3 +250,34 @@ void tablaIMC (float *imc)
 	else if (*imc >= 30)
 		printf("\n\n\t Su peso esta muy por encima de lo normal. Le recomendamos que consulte a un especialista.");
 }
+
+int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj)
+{
+	int i, j, k;
+	
+	strcat(usuario, rutina.nombre);
+	strcat(usuario, ".txt");
+	strcat(ruta, usuario);
+	pf = fopen(ruta, "w+"); // CREA UN FILE PERSONAL DE CADA USUARIO Y DE CADA RUTINA
+	if(pf == NULL)
+	{
+		printf("\nError al abrir el archivo\n");
+		return -1;
+	}
+	else
+	{
+		fprintf(pf, "\t\t%-20s", rutina.ej[0].nombre);
+		
+		for(i = 1; i < nEj; i++)
+			fprintf(pf, "%-20s", &rutina.ej[i].nombre);
+		
+		for(j = 0; j < nSets; j++){
+			fprintf(pf, "\nSerie%-20i", j+1);
+			
+			for(k = 0; k < nEj; k++)
+				fprintf(pf, "%-20i", rutina.ej[k].sets[j].reps);
+		}
+	}
+}
+
+int verificarUsuario (char nombre[], FILE *pf);

@@ -1,0 +1,4 @@
+		sentadillas         peso_muerto         curl_piernas        prensa_piernas      gemelos             
+Serie1                   1                   4                   7                   10                  13                  
+Serie2                   2                   5                   8                   11                  14                  
+Serie3                   3                   6                   9                   12                  15                  
