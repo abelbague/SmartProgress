@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define NUM_RUT 4
-#define NUM_EJ 5
-#define NUM_SETS 3
-#define REST_TIME 60
+#define NUM_RUT 4 // Nº DE RUTINAS
+#define NUM_EJ 5 // Nº DE EJERCICIOS POR RUTINA
+#define NUM_SETS 3 77 // Nº DE SERIES POR EJERCICIO
 
 typedef struct{
 	int reps;
@@ -15,7 +14,7 @@ typedef struct{
 	series sets[NUM_SETS];
 }ejercicio;
 
-typedef struct{
+typedef struct{ // STRUCT PRINCIPAL
 	char nombre[20];
 	ejercicio ej[NUM_EJ];
 }rutinas;
@@ -26,3 +25,4 @@ void rellenarStruct (rutinas rutina[], FILE *pf1, FILE *pf2, FILE *pf3, int nRut
 float calculoIMC (float *p, float *a);
 int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj);
 int verificarUsuario (char nombre[], FILE *pf);
+
