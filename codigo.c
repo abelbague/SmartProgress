@@ -1,9 +1,9 @@
 #include "libreria.h"
 
 int main(){
-	int i, j, k, l=0, m, n, o, p, q, r, nuevo = 1, guia, op, op2;
+	int l, m, n, o, p, q, r, nuevo = 1, guia, op, op2;
 	int aux, aux2 = 0, aux3 = 0, aux4 = 0, out = 0, num_reps, rest, repes[50];
-	char name[20], file_name[20], rutina[20], nameFile[50], rutaFile[50] = "Files/Progreso_usuarios/";
+	char name[20], rutina[20], rutaFile[50] = "Files/Progreso_usuarios/";
 	float peso, altura, imc;
 	FILE *ru, *ej, *rep, *us, *pu;
 	
@@ -16,8 +16,7 @@ int main(){
 	
 	rellenarStruct (rut, ru, ej, rep, NUM_RUT, NUM_EJ, NUM_SETS);
 	
-	do
-	{
+	
 		printf("\n\t\t\t\t\t  ~  Bienvenido a SmartProgress  ~ \n\t\t\t\t\t __________________________________");
 		printf("\n\n\n\n\t > Teclea tu nombre para personalizar la experiencia: ");
 			gets(name);
@@ -50,6 +49,8 @@ de manera aproximada cual es tu estado fisico actual.");
 				getch();
 			}
 		}
+	do
+	{	
 		system("cls");
 		printf("\n\n > En que podemos ayudarte %s?: ", name);
 		printf("\n\n\n\t [1] Entrenamientos y rutinas\n\n\t [2] Calcular mi IMC (Indice de Masa Corporal)\n\n\t [3] Salir ");
@@ -72,12 +73,14 @@ de manera aproximada cual es tu estado fisico actual.");
 						scanf("%s", rutina);
 							
 						for(l=0; l<NUM_RUT; l++){
+							if(aux2 == 1)
+								continue;
 							if(strncmp(rut[l].nombre, rutina, strlen(rutina))==0){ // compara con el mismo numero caracteres introducidos
 								aux = l; // referencia de la rutina seleccionada
-								aux4 = 1;
+								aux2 = 1;
 								system("cls");
 								strcpy(rut[NUM_RUT].nombre, rut[aux].nombre); // PARA LUEGO RELLENAR EL FICHERO DE TEXTO CON LOS RESULTADOS
-								printf("\n Has seleccionado la rutina de %s", rut[aux].nombre);
+								printf("\n Has seleccionado la rutina de %s", rut[NUM_RUT].nombre);
 								printf("\n\n > Tiempo de descanso entre series? \n\t");
 									fflush(stdin);
 									scanf("%i", &rest);
@@ -117,10 +120,10 @@ de manera aproximada cual es tu estado fisico actual.");
 								{
 									printf("\n\t > Bien hecho! Rutina de %s terminada", rut[aux].nombre);
 									printf("\n > Estos son tus resultados:\n\n");	
-									printf("\t\t%-20s", rut[aux].ej[0].nombre);
+									printf("\t\t%-20s", rut[NUM_RUT].ej[0].nombre);
 									
 									for( o=1; o<NUM_EJ; o++)
-										printf("%-20s", rut[aux].ej[o].nombre);
+										printf("%-20s", rut[NUM_RUT].ej[o].nombre);
 									
 									for(r=0; r<NUM_SETS; r++){
 										printf("\nSerie%-20i", r+1);
@@ -129,9 +132,10 @@ de manera aproximada cual es tu estado fisico actual.");
 											printf("%-20i", rut[NUM_RUT].ej[p].sets[r].reps);
 									}	
 									
-								archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ); // SE ALMACENA EN UN .TXT
+								archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ, aux4); // SE ALMACENA EN UN .TXT
+								aux4 = 1; // evita que el nombre de la ruta del file cambie
 							
-								if(archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ) == 0)
+								if(archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ, aux4) == 0)
 									printf("\n\n > Tus resultados han sido correctamente guardados.");
 
 								printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
@@ -141,7 +145,7 @@ de manera aproximada cual es tu estado fisico actual.");
 						if(aux3 == 1) break;	
 						}
 						
-						if(aux4 == 0){
+						if(aux2 == 0){
 							printf("\nNo hay ninguna rutina con ese nombre. Pulsa cualquier tecla para volver al inicio");
 							getch();
 						}

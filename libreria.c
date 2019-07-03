@@ -28,13 +28,16 @@ void tablaIMC (float *imc)
 		printf("\n\n\t Su peso esta muy por encima de lo normal. Le recomendamos que consulte a un especialista.");
 }
 
-int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj)
+int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int nSets, int nEj, int aux)
 {
 	int i, j, k;
 	
-	strcat(usuario, rutina.nombre);
-	strcat(usuario, ".txt");
-	strcat(ruta, usuario);
+	if(aux == 0)
+	{
+		strcat(ruta, usuario);
+		strcat(ruta, rutina.nombre);
+		strcat(ruta, ".txt");
+	}
 	pf = fopen(ruta, "w+"); // CREA UN FILE PERSONAL DE CADA USUARIO Y DE CADA RUTINA
 	if(pf == NULL)
 	{
@@ -46,7 +49,7 @@ int archivoUsuario (char usuario[], rutinas rutina, char ruta[], FILE *pf, int n
 		fprintf(pf, "\t\t%-20s", rutina.ej[0].nombre);
 		
 		for(i = 1; i < nEj; i++)
-			fprintf(pf, "%-20s", &rutina.ej[i].nombre);
+			fprintf(pf, "%-20s", rutina.ej[i].nombre);
 		
 		for(j = 0; j < nSets; j++){
 			fprintf(pf, "\nSerie%-20i", j+1);
