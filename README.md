@@ -1,6 +1,6 @@
 # SmartProgress
 
-Aplicación orientada al uso deportivo ya sea amateur o de alto rendimiento.
+Aplicación orientada al uso deportivo ya sea amateur o de alto rendimiento y perfectamente adaptable a multiple disciplinas.
 
 ## Autor
 
