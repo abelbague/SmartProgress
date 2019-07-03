@@ -132,12 +132,9 @@ de manera aproximada cual es tu estado fisico actual.");
 											printf("%-20i", rut[NUM_RUT].ej[p].sets[r].reps);
 									}	
 									
-								archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ, aux4); // SE ALMACENA EN UN .TXT
+								archivoUsuario (name, rut, NUM_RUT, rutaFile, pu, NUM_SETS, NUM_EJ, aux4); // SE ALMACENA EN UN .TXT
 								aux4 = 1; // evita que el nombre de la ruta del file cambie
-							
-								if(archivoUsuario (name, rut[NUM_RUT], rutaFile, pu, NUM_SETS, NUM_EJ, aux4) == 0)
-									printf("\n\n > Tus resultados han sido correctamente guardados.");
-
+								
 								printf("\n\n\nPulse cualquier tecla para ir al menu de inicio...");
 								getch();
 								}
@@ -173,7 +170,6 @@ de manera aproximada cual es tu estado fisico actual.");
 			
 			case 3:
 				printf("\n >> Hasta la proxima %s\n\n", name);
-				Sleep(1000);
 				out = 1; //	Salir del programa
 				break;
 				
